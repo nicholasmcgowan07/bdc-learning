@@ -26,7 +26,7 @@ async function aiGen(desc,ctx){
 Rules: 2-3 categories (max 4). 5-8 items each belonging unambiguously to one category. At least 1 misclassification trap. Rationale explains WHY, especially for tricky items.
 Return ONLY valid JSON, no markdown, no preamble:
 {"topic":"Short title","objective":"One sentence starting with a verb","categories":[{"id":"cat-1","label":"Category name"},…],"items":[{"id":"c1","label":"Item text","categoryId":"cat-1","rationale":"Why this category"},…]}`;
-  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,system:sys,messages:[{role:"user",content:desc+extra}]})});
+  const res=await fetch("https://bdc-api.nicholasmcgowan07.workers.dev",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,system:sys,messages:[{role:"user",content:desc+extra}]})});
   const d=await res.json();
   if(d.error)throw new Error(d.error.message);
   return d.content[0].text;

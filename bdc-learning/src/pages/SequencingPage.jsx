@@ -25,7 +25,7 @@ async function aiGen(desc,ctx){
 Rules: 5-7 steps listed in CORRECT order. At least 2 adjacent pairs learners commonly confuse. Each rationale explains WHY this step must be in this position — the reasoning is the learning.
 Return ONLY valid JSON, no markdown, no preamble:
 {"topic":"Short title","objective":"One sentence starting with a verb","items":[{"id":"s1","label":"Step text","rationale":"Why this position matters and what goes wrong if misplaced"},…]}`;
-  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,system:sys,messages:[{role:"user",content:desc+extra}]})});
+  const res=await fetch("https://bdc-api.nicholasmcgowan07.workers.dev",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,system:sys,messages:[{role:"user",content:desc+extra}]})});
   const d=await res.json();
   if(d.error)throw new Error(d.error.message);
   return d.content[0].text;

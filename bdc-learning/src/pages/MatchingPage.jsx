@@ -48,7 +48,7 @@ Return ONLY valid JSON, no markdown, no preamble:
     ...
   ]
 }`;
-  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,system:sys,messages:[{role:"user",content:desc+extra}]})});
+  const res=await fetch("https://bdc-api.nicholasmcgowan07.workers.dev",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,system:sys,messages:[{role:"user",content:desc+extra}]})});
   const d=await res.json();
   if(d.error)throw new Error(d.error.message);
   return d.content[0].text;

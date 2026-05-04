@@ -465,18 +465,18 @@ function cardSentence(entry) {
 async function analyseIdea(idea, catalog) {
   const summary = catalog.map(function(e){ return "ID:"+e.id+" | "+e.name+": "+e.description.slice(0,120)+" Best for: "+e.bestFor.slice(0,80); }).join("\n");
   const sys = "You are an instructional design expert. Match the described learning activity to the catalog or propose a new type.\n\nExisting catalog:\n"+summary+"\n\nReturn ONLY valid JSON: {match, matchStrength, matchReason, newIdea or null}";
-  const res = await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:800,system:sys,messages:[{role:"user",content:"Developer's idea: "+idea}]})});
+  const res = await fetch("https://bdc-api.nicholasmcgowan07.workers.dev",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:800,system:sys,messages:[{role:"user",content:"Developer's idea: "+idea}]})});
   const d = await res.json(); return d.content[0].text;
 }
 async function generateObjectives(idea, activityName) {
   const sys = "You are an expert instructional designer. Generate 3 clear measurable learning objectives for a "+activityName+" activity. Each starts with an action verb. Return ONLY valid JSON: {topic, objectives: [string, string, string]}";
-  const res = await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:400,system:sys,messages:[{role:"user",content:"What I want to teach: "+idea}]})});
+  const res = await fetch("https://bdc-api.nicholasmcgowan07.workers.dev",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:400,system:sys,messages:[{role:"user",content:"What I want to teach: "+idea}]})});
   const d = await res.json(); if(d.error) throw new Error(d.error.message); return d.content[0].text;
 }
 async function generateActivity(entry, contract) {
   const objText = contract.objectives.filter(function(o){return o.trim();}).map(function(o,i){return (i+1)+". "+o;}).join("\n");
-  const sys = ["You are an expert React developer and instructional designer. Generate a complete production-ready JSX learning activity.","ACTIVITY: "+entry.name,"AI ROLE: "+entry.aiRole,"DESCRIPTION: "+entry.description,"BEST FOR: "+entry.bestFor,"OUTPUT FORMAT: "+entry.outputFormat,"DESIGN TIP: "+entry.designTip,"CURRICULUM CONTRACT: Topic: "+contract.topic+"\nObjectives:\n"+objText+"\nOut of scope: "+contract.outOfScope,"REQUIREMENTS: React functional component, default export App, fetch to https://api.anthropic.com/v1/messages, model claude-haiku-4-5-20251001, BDC colors RED #E8192C NAVY #1A2B4A, Helvetica Neue font, pill buttons, loading dots, error handling.","Output the complete JSX file only. No explanations."].join("\n");
-  const res = await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4000,system:sys,messages:[{role:"user",content:"Generate the complete activity JSX file now."}]})});
+  const sys = ["You are an expert React developer and instructional designer. Generate a complete production-ready JSX learning activity.","ACTIVITY: "+entry.name,"AI ROLE: "+entry.aiRole,"DESCRIPTION: "+entry.description,"BEST FOR: "+entry.bestFor,"OUTPUT FORMAT: "+entry.outputFormat,"DESIGN TIP: "+entry.designTip,"CURRICULUM CONTRACT: Topic: "+contract.topic+"\nObjectives:\n"+objText+"\nOut of scope: "+contract.outOfScope,"REQUIREMENTS: React functional component, default export App, fetch to https://bdc-api.nicholasmcgowan07.workers.dev, model claude-haiku-4-5-20251001, BDC colors RED #E8192C NAVY #1A2B4A, Helvetica Neue font, pill buttons, loading dots, error handling.","Output the complete JSX file only. No explanations."].join("\n");
+  const res = await fetch("https://bdc-api.nicholasmcgowan07.workers.dev",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4000,system:sys,messages:[{role:"user",content:"Generate the complete activity JSX file now."}]})});
   const d = await res.json(); if(d.error) throw new Error(d.error.message); return d.content[0].text;
 }
 
