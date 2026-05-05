@@ -546,87 +546,52 @@ function ActivityGridCard({entry,selected,onClick,dimmed}) {
 function FeaturedPanel({entry,onBuild,onClose}) {
   const rs=AI_ROLE_STYLES[entry.aiRole]||{}, ms=MODE_STYLES[entry.mode]||{}, ss=STRUCTURE_STYLES[entry.structure]||{};
   const isBuilt=entry.tag==="Built";
-  const navigate=useNavigate();
-  const [showTry,setShowTry]=useState(false);
-  const [copied,setCopied]=useState(false);
-  const handleCopy=()=>{navigator.clipboard.writeText(entry.refFile||entry.id+".jsx");setCopied(true);setTimeout(()=>setCopied(false),2000);};
   const ps=POSITION_STYLES[entry.positionPrimary]||{}, ps2=entry.positionSecondary?POSITION_STYLES[entry.positionSecondary]:null;
+  const navigate=useNavigate();
+  const timeMap={short:"2-5 min",medium:"5-10 min",long:"10-15 min"};
+  const highlights=(entry.goal||[]).slice(0,3);
+  const highlightIcons=["🧠","🔍","🗺️"];
   return (
-    <div style={{background:"#fff",border:"1px solid "+BORDER,borderLeft:"4px solid "+(ms.color||NAVY),borderRadius:12,marginBottom:"1.5rem",overflow:"hidden",boxShadow:"0 4px 24px rgba(26,43,74,0.09)",animation:"pl-in 0.22s ease both"}}>
-      <div style={{padding:"1.25rem 1.5rem",borderBottom:"1px solid "+BORDER,display:"flex",alignItems:"flex-start",gap:"1rem"}}>
-        <span style={{fontSize:32,lineHeight:1,flexShrink:0,marginTop:2}}>{entry.icon}</span>
+    <div style={{background:"#fff",border:"1px solid "+BORDER,borderRadius:14,marginBottom:"1.5rem",overflow:"hidden",boxShadow:"0 4px 24px rgba(26,43,74,0.09)",animation:"pl-in 0.22s ease both"}}>
+      <div style={{padding:"1.25rem 1.5rem",display:"flex",alignItems:"flex-start",gap:"1rem"}}>
+        <div style={{width:56,height:56,borderRadius:14,background:"#F0FAF6",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0}}>{entry.icon}</div>
         <div style={{flex:1,minWidth:0}}>
-          <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:"0.5rem"}}>
-            <span style={{fontSize:18,fontWeight:600,color:NAVY}}>{entry.name}</span>
-            <span style={{fontSize:9,fontWeight:700,padding:"2px 8px",borderRadius:20,background:entry.tagColor+"18",color:entry.tagColor,letterSpacing:"0.06em",fontFamily:MONO}}>{entry.tag}</span>
-            <ConnectivityBadge entry={entry}/>
+          <div style={{fontSize:20,fontWeight:700,color:NAVY,marginBottom:"0.625rem",lineHeight:1.2}}>{entry.name}</div>
+          <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap"}}>
+            {isBuilt&&<button onClick={()=>navigate("/"+entry.id)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"0.45rem 1.125rem",borderRadius:50,border:"none",background:"#0F6E56",color:"#fff",fontFamily:SANS,fontSize:13,fontWeight:700,cursor:"pointer"}}><svg width="11" height="11" viewBox="0 0 13 13" fill="none"><path d="M5 4.5l4 2-4 2V4.5z" fill="#fff"/></svg>Try</button>}
+            <button onClick={()=>onBuild(entry)} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"0.45rem 1.125rem",borderRadius:50,border:"1.5px solid #0F6E56",background:"transparent",color:"#0F6E56",fontFamily:SANS,fontSize:13,fontWeight:600,cursor:"pointer"}}>{isBuilt?"Customize ->":"Generate ->"}</button>
           </div>
-          <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap",marginBottom:"0.5rem"}}>
-            <span title={ms.title} style={{fontSize:11,fontWeight:600,padding:"3px 9px",borderRadius:4,background:ms.bg,color:ms.color,cursor:"help"}}>{ms.label}</span>
-            <span title={ss.title} style={{fontSize:11,fontWeight:500,padding:"3px 9px",borderRadius:4,background:ss.bg,color:ss.color,cursor:"help"}}>{ss.label}</span>
-            <span title={rs.title} style={{fontSize:11,fontWeight:500,padding:"3px 9px",borderRadius:4,background:rs.bg,color:rs.color,cursor:"help"}}>{entry.aiRole}</span>
-            <span title={ps.title} style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:3,background:ps.bg,color:ps.color,cursor:"help"}}>{ps.label}</span>
-            {ps2&&<span title={ps2.title} style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:3,background:ps2.bg,color:ps2.color,cursor:"help"}}>{ps2.label}</span>}
-            <span style={{fontSize:11,color:TT}}>{timeLabel(entry.timeNeeded)}</span>
-            <span style={{fontSize:11,color:TT}}>·</span>
-            <span style={{fontSize:11,color:TT}}>{entry.outputFormat}</span>
-          </div>
-          <div style={{fontSize:11,color:(CONNECTIVITY_STYLES[entry.connectivity]||{}).color,lineHeight:1.5,opacity:0.85}}>{(CONNECTIVITY_STYLES[entry.connectivity]||{}).title}</div>
         </div>
         <button onClick={onClose} style={{flexShrink:0,width:28,height:28,borderRadius:"50%",border:"1px solid "+BORDER,background:"#F8F9FB",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:TT}}>
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 1.5l7 7M8.5 1.5l-7 7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
         </button>
       </div>
-      <div style={{padding:"1.25rem 1.5rem"}}>
-        <div style={{marginBottom:"1.25rem"}}>
-          <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.08em",color:TT,fontFamily:MONO,marginBottom:"0.5rem"}}>What this activity achieves</div>
-          {(entry.goal||[]).map((g,i)=><div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:i<entry.goal.length-1?"0.375rem":0}}><span style={{fontSize:11,color:ms.color,fontWeight:700,marginTop:1,flexShrink:0}}>→</span><span style={{fontSize:13.5,color:NAVY,lineHeight:1.55}}>{g}</span></div>)}
-        </div>
-        <p style={{fontSize:13,color:TS,lineHeight:1.7,marginBottom:"1.25rem",paddingTop:"1rem",borderTop:"1px solid "+BORDER}}>{entry.description}</p>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.875rem",marginBottom:"1.25rem"}}>
-          <div style={{padding:"0.875rem",background:"#F8FFFE",borderRadius:8,border:"1px solid #C6F6EF"}}>
-            <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.07em",color:GRN,marginBottom:5,fontFamily:MONO}}>Use when</div>
-            <div style={{fontSize:12.5,color:"#065F46",lineHeight:1.55}}>{entry.bestFor}</div>
-          </div>
-          <div style={{padding:"0.875rem",background:"#FFF8F8",borderRadius:8,border:"1px solid #FECDCA"}}>
-            <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.07em",color:"#991B1B",marginBottom:5,fontFamily:MONO}}>Avoid when</div>
-            <div style={{fontSize:12.5,color:"#7A271A",lineHeight:1.55}}>{entry.antiPattern}</div>
-          </div>
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.875rem",marginBottom:"1.25rem"}}>
-          {entry.designTip&&<div style={{background:"#EEF4FF",border:"1px solid #C7D9F8",borderRadius:8,padding:"0.875rem"}}><div style={{fontSize:9,fontWeight:700,letterSpacing:"0.07em",textTransform:"uppercase",color:"#1A4FAA",marginBottom:5,fontFamily:MONO}}>Design Tip</div><div style={{fontSize:12.5,color:"#1A3570",lineHeight:1.6}}>{entry.designTip}</div></div>}
-          {entry.commonPitfalls?.length>0&&<div style={{background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:8,padding:"0.875rem"}}><div style={{fontSize:9,fontWeight:700,letterSpacing:"0.07em",textTransform:"uppercase",color:"#92400E",marginBottom:5,fontFamily:MONO}}>Common Pitfalls</div>{entry.commonPitfalls.map((p,i)=><div key={i} style={{display:"flex",gap:6,fontSize:12.5,color:"#78350F",lineHeight:1.55,marginBottom:i<entry.commonPitfalls.length-1?5:0}}><span style={{flexShrink:0}}>⚠</span><span>{p}</span></div>)}</div>}
-        </div>
-        {entry.pairings?.length>0&&(
-          <div style={{marginBottom:"1.25rem"}}>
-            <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.08em",color:TT,fontFamily:MONO,marginBottom:"0.625rem"}}>Pairs well with</div>
-            <div style={{display:"flex",flexDirection:"column",gap:"0.5rem"}}>
-              {entry.pairings.map(pair=>{
-                const partner=CATALOG.find(e=>e.id===pair.id);
-                if(!partner) return null;
-                const prs=AI_ROLE_STYLES[partner.aiRole]||{}, pms=MODE_STYLES[partner.mode]||{};
-                return <div key={pair.id} style={{display:"flex",gap:"0.75rem",alignItems:"flex-start",padding:"0.75rem 0.875rem",background:"#F8F9FB",border:"1px solid "+BORDER,borderRadius:8}}>
-                  <span style={{fontSize:20,flexShrink:0,lineHeight:1,marginTop:2}}>{partner.icon}</span>
-                  <div style={{flex:1}}><div style={{display:"flex",alignItems:"center",gap:6,marginBottom:"0.3rem",flexWrap:"wrap"}}><span style={{fontSize:13,fontWeight:600,color:NAVY}}>{partner.name}</span><span style={{fontSize:9,fontWeight:600,padding:"1px 6px",borderRadius:3,background:pms.bg,color:pms.color}}>{pms.label}</span><span style={{fontSize:9,fontWeight:500,padding:"1px 6px",borderRadius:3,background:prs.bg,color:prs.color}}>{partner.aiRole}</span></div><div style={{fontSize:12,color:TS,lineHeight:1.55}}>{pair.reason}</div></div>
-                </div>;
-              })}
+      <div style={{padding:"0 1.5rem 1rem"}}>
+        <p style={{fontSize:15,fontWeight:600,color:NAVY,lineHeight:1.55,margin:0}}>{entry.description}</p>
+      </div>
+      <div style={{padding:"0.75rem 1.5rem",borderTop:"1px solid "+BORDER,borderBottom:"1px solid "+BORDER,display:"flex",alignItems:"center",gap:"0.5rem",flexWrap:"wrap"}}>
+        <span style={{fontSize:12,fontWeight:600,padding:"3px 10px",borderRadius:4,background:ms.bg,color:ms.color}}>{ms.label}</span>
+        <span style={{color:BORDER,fontSize:14}}>|</span>
+        <span style={{fontSize:12,fontWeight:500,padding:"3px 10px",borderRadius:4,background:ss.bg,color:ss.color}}>{ss.label}</span>
+        <span style={{color:BORDER,fontSize:14}}>|</span>
+        <span style={{fontSize:12,fontWeight:500,padding:"3px 10px",borderRadius:4,background:rs.bg,color:rs.color}}>{entry.aiRole}</span>
+        <span style={{color:BORDER,fontSize:14}}>|</span>
+        <span style={{fontSize:12,fontWeight:600,color:ps.color}}>{ps.label}{ps2&&<span style={{color:TT}}> to {ps2.label}</span>}</span>
+        <span style={{color:BORDER,fontSize:14}}>|</span>
+        <span style={{fontSize:12,color:TT}}>{timeMap[entry.timeNeeded]||entry.timeNeeded}</span>
+      </div>
+      {highlights.length>0&&(
+        <div style={{display:"grid",gridTemplateColumns:"repeat("+highlights.length+",1fr)",borderBottom:"1px solid "+BORDER}}>
+          {highlights.map((g,i)=>(
+            <div key={i} style={{padding:"1rem 1.25rem",borderRight:i<highlights.length-1?"1px solid "+BORDER:"none",display:"flex",alignItems:"flex-start",gap:"0.625rem"}}>
+              <span style={{fontSize:18,flexShrink:0}}>{highlightIcons[i]}</span>
+              <span style={{fontSize:13,color:NAVY,lineHeight:1.5,fontWeight:500}}>{g}</span>
             </div>
-          </div>
-        )}
-        <div style={{display:"flex",alignItems:"center",gap:"0.75rem",flexWrap:"wrap",paddingTop:"1rem",borderTop:"1px solid "+BORDER}}>
-          {isBuilt&&<button onClick={()=>navigate('/' + entry.id)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"0.6rem 1.375rem",borderRadius:50,border:"none",background:RED,color:"#fff",fontFamily:SANS,fontSize:13,fontWeight:700,cursor:"pointer"}}><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="#fff" strokeWidth="1.2" fill="none"/><path d="M5 4.5l4 2-4 2V4.5z" fill="#fff"/></svg>Try this activity</button>}
-          <button onClick={()=>onBuild(entry)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"0.6rem 1.375rem",borderRadius:50,border:"1.5px solid "+BORDER,background:"transparent",color:NAVY,fontFamily:SANS,fontSize:13,fontWeight:600,cursor:"pointer"}}>{isBuilt?"Adapt this activity →":"Generate this activity →"}</button>
+          ))}
         </div>
-        {showTry&&(
-          <div style={{marginTop:"0.875rem",padding:"1rem",background:"#F8F9FB",border:"1px solid "+BORDER,borderRadius:8}}>
-            <div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.08em",color:TT,marginBottom:"0.5rem",fontFamily:MONO}}>How to run this activity</div>
-            <ol style={{paddingLeft:"1.1rem",fontSize:13,color:TS,lineHeight:1.9,margin:0}}><li>Open a new Claude.ai chat in this project</li><li>Upload or reference the file below</li><li>Ask Claude: <em style={{color:NAVY}}>"Run this as an artifact"</em></li></ol>
-            <div style={{display:"flex",alignItems:"center",gap:8,marginTop:"0.75rem",padding:"0.5rem 0.75rem",background:"#fff",border:"1px solid "+BORDER,borderRadius:6}}>
-              <code style={{flex:1,fontSize:12,fontFamily:MONO,color:NAVY}}>{entry.refFile||entry.id+".jsx"}</code>
-              <button onClick={handleCopy} style={{fontSize:11,fontWeight:600,padding:"2px 10px",borderRadius:20,border:"1px solid "+(copied?GRN:BORDER),background:copied?GRN_L:"#fff",color:copied?GRN:TS,cursor:"pointer",fontFamily:SANS,transition:"all 0.2s"}}>{copied?"✓ Copied":"Copy"}</button>
-            </div>
-          </div>
-        )}
+      )}
+      <div style={{padding:"0.875rem 1.5rem",display:"flex",alignItems:"center",gap:"0.5rem"}}>
+        <span style={{fontSize:13,color:TT}}><strong style={{color:NAVY}}>Best for:</strong> {entry.bestFor}</span>
       </div>
     </div>
   );
