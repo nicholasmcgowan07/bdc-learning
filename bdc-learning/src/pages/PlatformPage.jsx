@@ -248,7 +248,7 @@ const CATALOG = [
     category: "adaptive",
   },
   {
-    id: "co-viewer", name: "Co-Viewer", tag: "Planned", tagColor: "#1A2B4A", icon: "🎬", aiRole: "Guide",
+    id: "co-viewer", name: "Co-Viewer", tag: "Built", tagColor: "#0F6E56", icon: "🎬", aiRole: "Guide",
     connectivity: "live", positionPrimary: "practice", positionSecondary: null,
     mode: "exploration", structure: "adaptive", outputFormat: "Written response",
     goal: ["Get immediate answers to questions during video viewing grounded in the video's content", "Deepen comprehension of complex content without leaving the learning context"],
