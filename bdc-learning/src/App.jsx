@@ -1,14 +1,17 @@
 import { Routes, Route } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import PlatformPage          from './pages/PlatformPage.jsx'
-import SequencingPage        from './pages/SequencingPage.jsx'
-import CategorisationPage    from './pages/CategorisationPage.jsx'
-import MultipleChoicePage    from './pages/MultipleChoicePage.jsx'
-import TrueOrFalsePage       from './pages/TrueOrFalsePage.jsx'
-import MatchingPage          from './pages/MatchingPage.jsx'
-import MythLabPage           from './pages/MythLabPage.jsx'
-import WorldModelBuilderPage from './pages/WorldModelBuilderPage.jsx'
-import CoViewerPage          from './pages/CoViewerPage.jsx'
+import PlatformPage            from './pages/PlatformPage.jsx'
+import SequencingPage          from './pages/SequencingPage.jsx'
+import CategorisationPage      from './pages/CategorisationPage.jsx'
+import MultipleChoicePage      from './pages/MultipleChoicePage.jsx'
+import TrueOrFalsePage         from './pages/TrueOrFalsePage.jsx'
+import MatchingPage            from './pages/MatchingPage.jsx'
+import MythLabPage             from './pages/MythLabPage.jsx'
+import WorldModelBuilderPage   from './pages/WorldModelBuilderPage.jsx'
+import CoViewerPage            from './pages/CoViewerPage.jsx'
+import DecisionSimulatorPage   from './pages/DecisionSimulatorPage.jsx'
+import PressureTestPage        from './pages/PressureTestPage.jsx'
+import AdaptiveQuestionPackPage from './pages/AdaptiveQuestionPackPage.jsx'
 
 function ActivityShell({ children }) {
   const navigate = useNavigate()
@@ -72,6 +75,15 @@ export default function App() {
       } />
       <Route path="/co-viewer" element={
         <ActivityShell><CoViewerPage /></ActivityShell>
+      } />
+      <Route path="/decision-sim" element={
+        <ActivityShell><DecisionSimulatorPage /></ActivityShell>
+      } />
+      <Route path="/pressure-test" element={
+        <ActivityShell><PressureTestPage /></ActivityShell>
+      } />
+      <Route path="/adaptive-question-pack" element={
+        <ActivityShell><AdaptiveQuestionPackPage /></ActivityShell>
       } />
     </Routes>
   )
