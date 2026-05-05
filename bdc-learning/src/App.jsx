@@ -12,6 +12,7 @@ import CoViewerPage            from './pages/CoViewerPage.jsx'
 import DecisionSimulatorPage   from './pages/DecisionSimulatorPage.jsx'
 import PressureTestPage        from './pages/PressureTestPage.jsx'
 import AdaptiveQuestionPackPage from './pages/AdaptiveQuestionPackPage.jsx'
+import ConversationSimPage from './pages/ConversationSimPage.jsx'
 
 function ActivityShell({ children }) {
   const navigate = useNavigate()
@@ -84,6 +85,9 @@ export default function App() {
       } />
       <Route path="/adaptive-question-pack" element={
         <ActivityShell><AdaptiveQuestionPackPage /></ActivityShell>
+      } />
+      <Route path="/conversation-sim" element={
+        <ActivityShell><ConversationSimPage /></ActivityShell>
       } />
     </Routes>
   )
