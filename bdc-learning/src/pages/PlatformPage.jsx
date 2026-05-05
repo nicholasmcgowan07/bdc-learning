@@ -559,7 +559,6 @@ function FeaturedPanel({entry,onBuild,onClose}) {
           <div style={{fontSize:20,fontWeight:700,color:NAVY,marginBottom:"0.625rem",lineHeight:1.2}}>{entry.name}</div>
           <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap"}}>
             {isBuilt&&<button onClick={()=>navigate("/"+entry.id)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"0.45rem 1.125rem",borderRadius:50,border:"none",background:"#0F6E56",color:"#fff",fontFamily:SANS,fontSize:13,fontWeight:700,cursor:"pointer"}}><svg width="11" height="11" viewBox="0 0 13 13" fill="none"><path d="M5 4.5l4 2-4 2V4.5z" fill="#fff"/></svg>Try</button>}
-            <button onClick={()=>onBuild(entry)} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"0.45rem 1.125rem",borderRadius:50,border:"1.5px solid #0F6E56",background:"transparent",color:"#0F6E56",fontFamily:SANS,fontSize:13,fontWeight:600,cursor:"pointer"}}>{isBuilt?"Customize ->":"Generate ->"}</button>
           </div>
         </div>
         <button onClick={onClose} style={{flexShrink:0,width:28,height:28,borderRadius:"50%",border:"1px solid "+BORDER,background:"#F8F9FB",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:TT}}>
